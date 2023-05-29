@@ -1,9 +1,6 @@
 package com.example.aisle.ui.activity.ui.login
 
-/**
- * Authentication result : success (user details) or error message.
- */
+import com.google.gson.annotations.SerializedName
 data class LoginResult(
-    val success: LoggedInUserView? = null,
-    val error: Int? = null
+    @SerializedName("status"     )var status: Boolean? = null
 )

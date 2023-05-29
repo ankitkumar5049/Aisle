@@ -24,7 +24,7 @@ class OtpActivity : AppCompatActivity() {
     private fun initClicks() {
 
         binding.tvPhoneNumber.text = "+91 $phoneNumber"
-            binding.btnContinueVerify.setOnClickListener {
+        binding.btnContinueVerify.setOnClickListener {
                 Log.e("TAG", "initClicks: button clicked", null)
                 if (validate()){
                     val intent =
@@ -35,7 +35,7 @@ class OtpActivity : AppCompatActivity() {
                 else{
                     Toast.makeText(applicationContext,"empty otp", Toast.LENGTH_SHORT).show()
                 }
-            }
+        }
 
     }
 
