@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
             binding.btnContinue?.setOnClickListener {
                 if (validate()){
+                    binding.loading.visibility = View.VISIBLE
 
                     apiCall()
 
@@ -51,14 +54,18 @@ class LoginActivity : AppCompatActivity() {
 
     private fun apiCall() {
         val hashMap = HashMap<String, String>()
-        hashMap.set("number", binding.etPhoneNumber?.text.toString())
+        hashMap.set("number", "+91${binding.etPhoneNumber?.text}")
 
-        val phoneNumberRequest = PhoneNumberRequest(hashMap)
-        apiService.phoneNumberLogin(phoneNumberRequest).enqueue(object : Callback<PhoneNumberResponse> {
+//        val phoneNumberRequest = PhoneNumberRequest(hashMap)
+        val phoneNumberRequest = PhoneNumberRequest(number = "+91${binding.etPhoneNumber?.text.toString()}")
+        apiService.phoneNumberLogin(phoneNumberRequest).
+        enqueue(object : Callback<PhoneNumberResponse> {
             override fun onResponse(
                 call: Call<PhoneNumberResponse>,
                 response: Response<PhoneNumberResponse>) {
-                if (response.isSuccessful) {
+
+                binding.loading.visibility = View.VISIBLE
+                if (response.code()==200) {
                     val phoneNumberResponse = response.body()
                     // Handle the successful response
                     if (phoneNumberResponse?.status == true) {
@@ -81,6 +88,7 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<PhoneNumberResponse>, t: Throwable) {
                 // Handle the network or other failures
+                Toast.makeText(applicationContext,"Api Failure!",Toast.LENGTH_SHORT).show()
             }
         })
 

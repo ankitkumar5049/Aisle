@@ -1,3 +1,3 @@
 package com.example.aisle.data
 
-data class OtpResponse(val success: Boolean)
+data class OtpResponse(val token: String?)

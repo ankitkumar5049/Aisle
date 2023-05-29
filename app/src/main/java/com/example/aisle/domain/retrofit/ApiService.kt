@@ -10,12 +10,17 @@ import retrofit2.http.*
 
 interface ApiService {
     @POST("users/phone_number_login")
-    fun phoneNumberLogin(@Body request: PhoneNumberRequest): Call<
-            PhoneNumberResponse>
+    fun phoneNumberLogin(
+        @Body request: PhoneNumberRequest
+    ): Call<PhoneNumberResponse>
 
     @POST("users/verify_otp")
-    fun verifyOtp(@Body request: OtpRequest): Call<OtpResponse>
+    fun verifyOtp(
+        @Body request: OtpRequest
+    ): Call<OtpResponse>
 
     @GET("users/test_profile_list")
-    fun getTestProfiles(@Header("Authorization") authToken: String): Call<TestProfilesResponse>
+    fun getTestProfiles(
+        @Header("Authorization") authToken: String
+    ): Call<TestProfilesResponse>
 }

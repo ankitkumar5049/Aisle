@@ -21,5 +21,9 @@
     <string name="get_otp">Get OTP</string>
     <string name="enter_the_otp">Enter The OTP</string>
     <string name="continue_">Continue</string>
+    <string name="notes">Notes</string>
+    <string name="personal_message_to_you">Personal message to you</string>
+    <string name="interested_in_you">Interested In You</string>
+    <string name="upgrade">Upgrade</string>
 
 </resources>
