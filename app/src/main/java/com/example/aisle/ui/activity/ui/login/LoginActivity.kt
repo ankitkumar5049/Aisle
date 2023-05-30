@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
-    private val apiService = RetrofitClient.apiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
             } else {
                 // Handle login failure
-                Toast.makeText(applicationContext,"Something went wrong here",Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext,"Something went wrong, try again",Toast.LENGTH_SHORT).show()
             }
         }
     }

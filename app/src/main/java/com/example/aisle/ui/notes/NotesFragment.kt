@@ -1,5 +1,6 @@
 package com.example.aisle.ui.notes
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +10,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.aisle.R
 import com.example.aisle.data.ResponseModel
+import com.example.aisle.databinding.FragmentNotesBinding
 import com.example.aisle.domain.retrofit.RetrofitClient
+import com.example.aisle.ui.activity.otp.OtpActivity
+import com.example.aisle.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,13 +21,16 @@ import retrofit2.Response
 
 class NotesFragment : Fragment() {
 
-    private val apiService = RetrofitClient.apiService
-    private var authToken: String? = "32c7794d2e6a1f7316ef35aa1eb34541"
+    private var authToken: String? = Constants.token
+    lateinit var notesViewModel: NotesViewModel
+    lateinit var binding: FragmentNotesBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        apiCall()
+        notesViewModel = NotesViewModel()
+        authToken?.let { notesViewModel.getDetails(it) }
+        attachObservers()
         return inflater.inflate(R.layout.fragment_notes, container, false)
     }
 
@@ -39,26 +46,17 @@ class NotesFragment : Fragment() {
         }
     }
 
-    private fun apiCall() {
 
-        authToken?.let {
-            apiService.getTestProfiles(it).enqueue(object : Callback<ResponseModel> {
-                override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
-                    if (response.isSuccessful) {
-                        val testProfilesResponse = response.body()
-                        // Handle the successful response
-                        Log.e("TAG", "onResponse: ${testProfilesResponse.toString()}", )
-                    } else {
-                        // Handle the error response
-                        Toast.makeText(context,"Something went wrong here", Toast.LENGTH_SHORT).show()
-                    }
-                }
+    private fun attachObservers(){
+        notesViewModel.notesStatus.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                // Handle successful login
+                Toast.makeText(context,"Data received in the backend",Toast.LENGTH_SHORT).show()
 
-                override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                    // Handle the network or other failures
-                    Toast.makeText(context,"Something went wrong",Toast.LENGTH_SHORT).show()
-                }
-            })
+            } else {
+                // Handle login failure
+                Toast.makeText(context,"Something went wrong here",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

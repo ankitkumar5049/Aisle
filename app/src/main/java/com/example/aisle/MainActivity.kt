@@ -28,14 +28,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         var token = intent.getStringExtra("token").toString()
         Log.e("TAG", "onCreate: $token")
-//        if (navController.currentDestination?.id == R.id.navigation_notes) {
-//            val bundle = Bundle().apply {
-//                putString("token", intent.getStringExtra("token").toString())
-//            }
-//            navController.setGraph(navController.graph, bundle)
-//        }
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_dashboard,

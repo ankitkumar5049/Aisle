@@ -57,13 +57,12 @@ class OtpActivity : AppCompatActivity() {
             if (it) {
                 // Handle successful login
                 val intent = Intent(this@OtpActivity, MainActivity::class.java)
-//                intent.putExtra("token", it.)
                 startActivity(intent)
                 finish()
 
             } else {
                 // Handle login failure
-                Toast.makeText(applicationContext, "Something went wrong here", Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Something went wrong, try again!", Toast.LENGTH_SHORT)
                     .show()
             }
         }
