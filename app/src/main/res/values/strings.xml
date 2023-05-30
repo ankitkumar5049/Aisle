@@ -25,5 +25,6 @@
     <string name="personal_message_to_you">Personal message to you</string>
     <string name="interested_in_you">Interested In You</string>
     <string name="upgrade">Upgrade</string>
+    <string name="premium_members_can_view_all_their_likes_at_once">Premium members can view all their likes at once</string>
 
 </resources>

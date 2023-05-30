@@ -1,60 +1,66 @@
 package com.example.aisle.ui.notes
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.aisle.R
+import com.example.aisle.data.ResponseModel
+import com.example.aisle.domain.retrofit.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [NotesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NotesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private val apiService = RetrofitClient.apiService
+    private var authToken: String? = "32c7794d2e6a1f7316ef35aa1eb34541"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        apiCall()
         return inflater.inflate(R.layout.fragment_notes, container, false)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NotesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NotesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        private const val ARG_DATA = "token"
+        fun newInstance(data: String?): NotesFragment {
+
+            val fragment = NotesFragment()
+            val args = Bundle()
+            args.putString(ARG_DATA, data)
+            fragment.arguments = args
+            return fragment
+        }
     }
+
+    private fun apiCall() {
+
+        authToken?.let {
+            apiService.getTestProfiles(it).enqueue(object : Callback<ResponseModel> {
+                override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                    if (response.isSuccessful) {
+                        val testProfilesResponse = response.body()
+                        // Handle the successful response
+                        Log.e("TAG", "onResponse: ${testProfilesResponse.toString()}", )
+                    } else {
+                        // Handle the error response
+                        Toast.makeText(context,"Something went wrong here", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                    // Handle the network or other failures
+                    Toast.makeText(context,"Something went wrong",Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+    }
+
+
 }

@@ -14,8 +14,12 @@
     <fragment
         android:id="@+id/navigation_notes"
         android:name="com.example.aisle.ui.notes.NotesFragment"
-        android:label="@string/title_dashboard"
+        android:label="Notes"
         tools:layout="@layout/fragment_notes" />
+
+    <argument
+        android:name="token"
+        app:argType="string" />
 
     <fragment
         android:id="@+id/navigation_matches"

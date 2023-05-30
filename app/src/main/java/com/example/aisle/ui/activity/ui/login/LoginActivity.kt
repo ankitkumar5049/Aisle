@@ -28,10 +28,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        loginViewModel = LoginViewModel()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initClicks()
+        attachObservers()
 
     }
 
@@ -41,61 +43,37 @@ class LoginActivity : AppCompatActivity() {
             binding.btnContinue?.setOnClickListener {
                 if (validate()){
                     binding.loading.visibility = View.VISIBLE
-
-                    apiCall()
-
+                    var phone = binding.etPhoneNumber?.text.toString()
+                    loginViewModel.login("+91$phone")
                 }
                 else{
-                    Toast.makeText(applicationContext,"empty number",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext,"Please enter valid number",Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    private fun apiCall() {
-        val hashMap = HashMap<String, String>()
-        hashMap.set("number", "+91${binding.etPhoneNumber?.text}")
+    private fun attachObservers(){
+        loginViewModel.loginStatus.observe(this@LoginActivity) { isLoggedIn ->
+            binding.loading.visibility = View.GONE
+            if (isLoggedIn) {
+                // Handle successful login
+                val intent = Intent(this@LoginActivity, OtpActivity::class.java)
+                intent.putExtra("mobileNo", binding.etPhoneNumber?.text.toString())
+                startActivity(intent)
+                finish()
 
-//        val phoneNumberRequest = PhoneNumberRequest(hashMap)
-        val phoneNumberRequest = PhoneNumberRequest(number = "+91${binding.etPhoneNumber?.text.toString()}")
-        apiService.phoneNumberLogin(phoneNumberRequest).
-        enqueue(object : Callback<PhoneNumberResponse> {
-            override fun onResponse(
-                call: Call<PhoneNumberResponse>,
-                response: Response<PhoneNumberResponse>) {
-
-                binding.loading.visibility = View.VISIBLE
-                if (response.code()==200) {
-                    val phoneNumberResponse = response.body()
-                    // Handle the successful response
-                    if (phoneNumberResponse?.status == true) {
-                        val intent =
-                            Intent(this@LoginActivity, OtpActivity::class.java)
-                        intent.putExtra("mobileNo", binding.etPhoneNumber?.text.toString())
-                        startActivity(intent)
-                        finish()
-
-                    }
-                    else{
-                        Toast.makeText(applicationContext,"Something went wrong here",Toast.LENGTH_SHORT).show()
-                    }
-
-                } else {
-                    // Handle the error response
-                    Toast.makeText(applicationContext,"Something went wrong",Toast.LENGTH_SHORT).show()
-                }
+            } else {
+                // Handle login failure
+                Toast.makeText(applicationContext,"Something went wrong here",Toast.LENGTH_SHORT).show()
             }
-
-            override fun onFailure(call: Call<PhoneNumberResponse>, t: Throwable) {
-                // Handle the network or other failures
-                Toast.makeText(applicationContext,"Api Failure!",Toast.LENGTH_SHORT).show()
-            }
-        })
-
+        }
     }
 
     private fun validate(): Boolean {
+        if(binding.etPhoneNumber?.text?.length!! <10)return false
         return binding.etPhoneNumber?.text?.trim()?.isEmpty() != true
+
     }
 
 }

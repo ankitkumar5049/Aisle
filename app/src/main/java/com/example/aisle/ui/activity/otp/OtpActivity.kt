@@ -23,12 +23,15 @@ class OtpActivity : AppCompatActivity() {
     private var phoneNumber: String? = null
     private var timer: CountDownTimer? = null
     private val waitingTime: Long = 1 * 60 * 1000
+    lateinit var otpViewModel: OtpViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOtpBinding.inflate(layoutInflater)
         phoneNumber = intent.getStringExtra("mobileNo")
-        Log.e("TAG", "onCreate: $phoneNumber", )
+        Log.e("TAG", "onCreate: $phoneNumber")
+        otpViewModel = OtpViewModel()
         initClicks()
+        attachObservers()
         startTimer()
         setContentView(binding.root)
     }
@@ -37,65 +40,54 @@ class OtpActivity : AppCompatActivity() {
 
         binding.tvPhoneNumber.text = "+91 $phoneNumber"
         binding.btnContinueVerify.setOnClickListener {
-                if (validate()){
-                    binding.loading.visibility = View.VISIBLE
-                    verifyOtp()
-                }
-                else{
-                    Toast.makeText(applicationContext,"empty otp", Toast.LENGTH_SHORT).show()
-                }
+            if (validate()) {
+                binding.loading.visibility = View.VISIBLE
+                otpViewModel.verify("+91$phoneNumber", binding.etOTP.text.toString())
+
+            } else {
+                Toast.makeText(applicationContext, "empty otp", Toast.LENGTH_SHORT).show()
+            }
         }
 
+    }
+
+    private fun attachObservers() {
+        otpViewModel.otpStatus.observe(this@OtpActivity) {
+            binding.loading.visibility = View.GONE
+            if (it) {
+                // Handle successful login
+                val intent = Intent(this@OtpActivity, MainActivity::class.java)
+//                intent.putExtra("token", it.)
+                startActivity(intent)
+                finish()
+
+            } else {
+                // Handle login failure
+                Toast.makeText(applicationContext, "Something went wrong here", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     private fun validate(): Boolean {
         return binding.etOTP?.text?.trim()?.isEmpty() != true
     }
 
-    private fun verifyOtp(){
-        // Verify OTP API call
-        val otpRequest = OtpRequest(number = "+91$phoneNumber", otp = binding.etOTP.text.toString())
-        apiService.verifyOtp(otpRequest).enqueue(object : Callback<OtpResponse> {
-            override fun onResponse(call: Call<OtpResponse>, response: Response<OtpResponse>) {
-                binding.loading.visibility = View.GONE
-                if (response.code()==200) {
-                    val otpResponse = response.body()
-                    Log.e("TAG", "onResponse: ${otpResponse?.token.toString()}", )
-                    // Handle the successful response
-                    if (otpResponse != null) {
-                        if (otpResponse.token != null) {
-                            val intent =
-                                Intent(this@OtpActivity, MainActivity::class.java)
-                            intent.putExtra("token", otpResponse.token)
-                            startActivity(intent)
-                            finish()
-                        }
-                    }
-
-                } else {
-                    // Handle the error response
-                    Toast.makeText(applicationContext,"Something went wrong here",Toast.LENGTH_SHORT).show()
-
-                }
-            }
-
-            override fun onFailure(call: Call<OtpResponse>, t: Throwable) {
-                // Handle the network or other failures
-                Toast.makeText(applicationContext,"API Failure",Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
 
     private fun startTimer() {
         timer = object : CountDownTimer(waitingTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // Update UI with the remaining time if needed
-                var sec: String = (millisUntilFinished/(1000)).toString()
-                var min: String = (sec.toInt()/60).toString()
-                sec = ((millisUntilFinished/(1000))%60).toString()
+                var sec: String = (millisUntilFinished / (1000)).toString()
+                var min: String = (sec.toInt() / 60).toString()
+                sec = ((millisUntilFinished / (1000)) % 60).toString()
 
-                if(min.toInt()<10){ min = "0$min" }
-                if(sec.toInt()<10){ sec = "0$sec" }
+                if (min.toInt() < 10) {
+                    min = "0$min"
+                }
+                if (sec.toInt() < 10) {
+                    sec = "0$sec"
+                }
 
                 binding.tvTimer.text = "$min : $sec"
             }

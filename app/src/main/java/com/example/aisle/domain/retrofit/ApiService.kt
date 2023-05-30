@@ -4,6 +4,7 @@ import com.example.aisle.data.OtpRequest
 import com.example.aisle.data.OtpResponse
 import com.example.aisle.data.PhoneNumberRequest
 import com.example.aisle.data.PhoneNumberResponse
+import com.example.aisle.data.ResponseModel
 import com.example.aisle.data.TestProfilesResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -22,5 +23,5 @@ interface ApiService {
     @GET("users/test_profile_list")
     fun getTestProfiles(
         @Header("Authorization") authToken: String
-    ): Call<TestProfilesResponse>
+    ): Call<ResponseModel>
 }
