@@ -63,7 +63,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/round_corner"
         android:gravity="center"
-        android:text="9876543212"
+        android:text=""
         android:maxLength="10"
         android:inputType="phone"
         android:textColor="@color/black"
