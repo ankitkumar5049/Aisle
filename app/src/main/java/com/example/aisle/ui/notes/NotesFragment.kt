@@ -51,6 +51,7 @@ class NotesFragment : Fragment() {
         notesViewModel.notesStatus.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 // Handle successful login
+
                 Toast.makeText(context,"Data received in the backend",Toast.LENGTH_SHORT).show()
 
             } else {

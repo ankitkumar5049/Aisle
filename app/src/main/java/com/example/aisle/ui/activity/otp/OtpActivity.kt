@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aisle.MainActivity
+import com.example.aisle.R
 import com.example.aisle.data.OtpRequest
 import com.example.aisle.data.OtpResponse
 import com.example.aisle.databinding.ActivityOtpBinding
@@ -32,6 +34,13 @@ class OtpActivity : AppCompatActivity() {
         otpViewModel = OtpViewModel()
         initClicks()
         attachObservers()
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = this.resources.getColor(R.color.white)
+        }
         startTimer()
         setContentView(binding.root)
     }

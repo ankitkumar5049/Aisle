@@ -1,14 +1,17 @@
 package com.example.aisle.ui.activity.ui.login
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aisle.R
 import com.example.aisle.data.PhoneNumberRequest
 import com.example.aisle.data.PhoneNumberResponse
 import com.example.aisle.databinding.ActivityLoginBinding
@@ -30,6 +33,13 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel = LoginViewModel()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = this.resources.getColor(R.color.white)
+        }
 
         initClicks()
         attachObservers()

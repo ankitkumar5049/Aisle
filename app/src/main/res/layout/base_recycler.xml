@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="5dp"
+    android:orientation="horizontal"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
@@ -17,7 +18,7 @@
             <ImageView
                 android:layout_width="180dp"
                 android:layout_height="260dp"
-                android:src="@drawable/photo_girl"
+                android:src="@drawable/pexels"
                 android:scaleType="centerCrop" />
 
             <ImageView
@@ -29,7 +30,44 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meena"
+                android:text="Shreya"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                />
+        </androidx.cardview.widget.CardView>
+
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="180dp"
+        android:layout_height="260dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="15dp"
+            android:layout_marginStart="10dp"
+            android:elevation="10dp">
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="260dp"
+                android:src="@drawable/pexels"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/blur_overlay"
+                android:scaleType="centerCrop"
+                android:alpha="0.9" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anjali"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
